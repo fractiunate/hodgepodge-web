@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fractiunate.me</title>
+</head>
+
+<body>
+  <style>
+    body {
+      background: linear-gradient(160deg, #111827, oklch(25.3267% 0.015896 252.417568 / 1));
+      }
+
+    .filterit:hover {
+      filter: invert(12%) sepia(7%) saturate(232%) hue-rotate(180deg) brightness(85%) contrast(90%);
+    }
+    .typewriter{
+      animation: 
+      typing 1.5s steps(14),
+      cursor 0.5s steps(1) infinite;
+    }
+    @keyframes cursor {
+      50% { border-color: transparent; }
+    }
+  
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 14ch }
+    }
+   
+  </style>
+  <div class="font-mono" id="app">
+
+  </div>
+
+  <!-- <i class="fa fa-home" aria-hidden="true" style="color:  #29ABE2;"></i>
+    <button
+      class="inline-block cursor-pointer rounded-md bg-gray-800 px-4 py-3 text-center text-sm font-semibold uppercase text-white transition duration-200 ease-in-out hover:bg-gray-900">
+      Button
+    </button> -->
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
