@@ -1,0 +1,14 @@
+{
+  "tasks": {
+    "dev": "deno run --allow-sys --allow-read --allow-env --allow-net --allow-import --unstable-cron --watch main.ts"
+  },
+  "imports": {
+    "@azure/communication-email": "npm:@azure/communication-email@^1.0.0",
+    "@azure/event-hubs": "npm:@azure/event-hubs@^6.0.0",
+    "@azure/storage-queue": "npm:@azure/storage-queue@^12.26.0",
+    "@std/assert": "jsr:@std/assert@1",
+    "qrcode": "npm:qrcode@^1.5.4",
+    "zod": "npm:zod@^3.25.51",
+    "zod-openapi": "npm:zod-openapi@^4.2.4"
+  }
+}
