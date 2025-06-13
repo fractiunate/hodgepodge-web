@@ -28,13 +28,18 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       
+      - id: replace-project
+        name: Replace project name
+        shell: bash
+        run: echo "project=$(echo '${{ github.event.inputs.project }}' | sed 's/\//-/g')" >> $GITHUB_OUTPUT
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
         with:
           # list of Docker images to use as base name for tags
-          # images: |
-          #   docker.io/username/app
+          images: |
+            docker.io/fractiunate/${{ steps.replace-project.outputs.project }}
           # generate Docker tags based on the following events/attributes
           tags: |
             type=ref,event=branch
