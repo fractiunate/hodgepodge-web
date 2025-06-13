@@ -51,6 +51,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v6
         with:
+          context: ${{ github.workspace }}/${{ github.event.inputs.project }}
           push: true
           build-args: |
             NODE_ENV=production
