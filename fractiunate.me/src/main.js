@@ -10,7 +10,7 @@ document.querySelector('#app').innerHTML = `
       <a href="/" class="text-gray-400"><img src="${logoUrl}" alt="Logo"  class="filterit p-2 w-48 scale-105 hover:scale-110 hover:drop-shadow transition-transform duration-300"></a>
       <div class="flex gap-4 ml-auto">
         <a href="https://github.com/fractiunate" class="text-white hover:text-gray-400 hover:scale-110 hover:drop-shadow transition-transform duration-300">Github</a>
-        <a href="#" class="text-white hover:text-gray-400 hover:scale-110 hover:drop-shadow transition-transform duration-300">Linked.in</a>
+        <a href="https://www.linkedin.com/in/fractiunate/" class="text-white hover:text-gray-400 hover:scale-110 hover:drop-shadow transition-transform duration-300">Linked.in</a>
         <a href="#" class="text-white hover:text-gray-400 hover:scale-110 hover:drop-shadow transition-transform duration-300">Contact</a>
       </div>
     </div>

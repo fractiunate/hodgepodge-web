@@ -15,7 +15,7 @@ export class QueueProcessor {
       const limit = pLimit(5);
       const messages = await this.queue.receiveMessages({
         numberOfMessages: 10,
-        visibilityTimeout: 30,
+        visibilityTimeout: 120,
       });
 
       await Promise.all(
