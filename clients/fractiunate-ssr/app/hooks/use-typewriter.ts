@@ -7,24 +7,28 @@ export default (text: string, speed = 50) => {
   function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
+  var ranonce = false;
 
   useEffect(() => {
-    setIsDone(false);
+    if (!ranonce) {
+      setIsDone(false);
+      ranonce = true;
 
-    setDisplayText("");
+      setDisplayText("");
 
-    async function typeEffect() {
-      for (let i = 0; i < text.length; i++) {
-        await sleep(speed);
-        setDisplayText((prevText) => prevText + text.charAt(i));
+      async function typeEffect() {
+        for (let i = 0; i < text.length; i++) {
+          await sleep(speed);
+          setDisplayText((prevText) => prevText + text.charAt(i));
+        }
+        setIsDone(true);
+        console.log("Typewriter effect completed");
       }
-      setIsDone(true);
-      console.log("Typewriter effect completed");
+      typeEffect();
+      return () => {
+        isDone;
+      };
     }
-    typeEffect();
-    return () => {
-      isDone;
-    };
   }, [text, speed]);
 
   return [displayText, isDone];

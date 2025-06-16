@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "../components/ui/button.tsx";
 import logo from "./logo.svg";
 import qr from "./fractiunate-qr-mail.png";
@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DialogClose, DialogFooter } from "../components/ui/dialog.tsx";
-import { Copy } from "lucide-react";
+import { Copy, Github, Linkedin, MessageCircle } from "lucide-react";
 import useTypewriter from "../hooks/use-typewriter.ts";
 import { Toaster, toast } from "sonner";
 import { cn } from "@/lib/utils.ts";
@@ -39,22 +39,32 @@ const Typewriter = ({
   speed?: number;
 }) => {
   const [typewriterText, setTypewriterText] = useState(text);
-  const [displayText, isDone] = useTypewriter(typewriterText, speed);
   const [isHighlighted, setIsHighlighted] = useState(false);
+  const isDoneRef = useRef(false);
+  const [displayText, isDone] = useTypewriter(typewriterText, speed);
 
   async function typeWriterTextList() {
     console.log("Typewriter effect started");
-    while (!isDone) {
+    while (!isDoneRef.current) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
-    if (isDone) await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
     setIsHighlighted(true);
-    if (isDone) await new Promise((resolve) => setTimeout(resolve, 1500));
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
+
   useEffect(() => {
+    isDoneRef.current = Boolean(isDone);
+  }, [isDone]);
+
+  useEffect(() => {
+    let active = true;
+
     typeWriterTextList();
+    return () => {
+      active = false;
+    };
   }, []);
 
   return (
@@ -94,7 +104,7 @@ export function Welcome({ message }: { message: string }) {
   const [typewriterText, setTypewriterText] = useState("Fractiunate.me");
 
   return (
-    <main className="flex flex-col h-screen text-white selection:bg-purple-600">
+    <main className="flex flex-col h-screen p-4 text-white selection:bg-purple-600">
       <Toaster
         duration={1000}
         position="top-center"
@@ -107,32 +117,32 @@ export function Welcome({ message }: { message: string }) {
           <img
             src={logo}
             alt="Logo"
-            className="w-48 p-4 transition-transform duration-300 scale-105 filterit hover:scale-110 hover:drop-shadow"
+            className="transition-transform duration-300 scale-105 w-58 filterit hover:scale-110 hover:drop-shadow"
           />
         </a>
-        <div className="flex gap-4 ml-auto">
+        <div className="flex gap-8 ml-auto text-lg">
           <a
             href="https://github.com/fractiunate"
-            className="text-white transition-transform duration-300 hover:text-gray-400 hover:scale-110 hover:drop-shadow">
+            className="flex items-center gap-1 text-white transition-transform duration-300 hover:text-pink-800 hover:scale-110 hover:drop-shadow">
+            <Github size={16} />
             Github
           </a>
           <a
             href="https://www.linkedin.com/in/fractiunate/"
-            className="text-white transition-transform duration-300 hover:text-gray-400 hover:scale-110 hover:drop-shadow">
+            className="flex items-center gap-1 text-white transition-transform duration-300 hover:text-pink-800 hover:scale-110 hover:drop-shadow">
+            <Linkedin size={16} />
             Linked.in
           </a>
           <Dialog>
-            <DialogTrigger>
-              {" "}
-              <a
-                href="#"
-                className="text-white transition-transform duration-300 hover:text-gray-400 hover:scale-110 hover:drop-shadow">
-                Contact
-              </a>
+            <DialogTrigger className="flex items-center gap-1 text-white transition-transform duration-300 cursor-pointer hover:text-pink-800 hover:scale-110 hover:drop-shadow">
+              <MessageCircle size={16} />
+              Contact
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>FRACTIUNATE // Virtual business card</DialogTitle>
+                <DialogTitle className="text-primary">
+                  FRACTIUNATE // Virtual business card
+                </DialogTitle>
                 <DialogDescription>
                   <div className="flex pt-4">
                     <div className="flex flex-col items-start justify-center flex-1 gap-1 text-primary/95">
@@ -152,17 +162,17 @@ export function Welcome({ message }: { message: string }) {
                         <p>
                           Web:{" "}
                           <a
-                            className="hover:underline text-purple-700"
-                            href="www.fractiunate.me">
-                            www.fractiunate.me
+                            className="text-purple-700 hover:underline"
+                            href="https://fractiunate.me">
+                            fractiunate.me
                           </a>
                         </p>
                       </span>
                       <span className="flex items-center w-full gap-1">
                         <p>
                           Whatsapp:{" "}
-                          <a 
-                            className="hover:underline text-purple-700"
+                          <a
+                            className="text-purple-700 hover:underline"
                             href="https://wa.me/qr/AN4AZN4NBDWUN1">
                             Contact me
                           </a>
@@ -178,7 +188,7 @@ export function Welcome({ message }: { message: string }) {
 
                     <img
                       src={qr}
-                      alt="Logo"
+                      alt="qr-code"
                       className="w-48 ml-auto transition-transform duration-300 scale-100 bg-white select-none filterit hover:scale-105 hover:drop-shadow"
                     />
                   </div>
@@ -200,16 +210,15 @@ export function Welcome({ message }: { message: string }) {
       <div className="flex flex-col items-center justify-center flex-grow mb-20 content">
         <div className="max-w-3xl text-center">
           <h1 className="text-4xl">
-            <div className="flex font-mono items-center">
-              <p className="flex ml-0 min-w-fit pr-4">This is</p>
+            <div className="flex items-center font-mono">
+              <p className="flex pr-4 ml-0 min-w-fit">This is</p>
               {/* <p className=""> */}
-              <div className="flex items-center justify-start w-full h-12 bg-muted p-2 border-2 rounded-lg border-gray-600">
-              <Typewriter
-                className=" overflow-hidden text-4xl font-bold text-left border-r whitespace-nowrap typewriter"
-                text={typewriterText}
-                speed={100}
-              />
-
+              <div className="flex items-center justify-start w-full h-12 p-2 border-2 border-gray-600 rounded-lg bg-muted">
+                <Typewriter
+                  className="overflow-hidden text-4xl font-bold text-left border-r whitespace-nowrap typewriter"
+                  text={typewriterText}
+                  speed={100}
+                />
               </div>
               <div className="flex-grow"></div>
             </div>
@@ -231,6 +240,15 @@ export function Welcome({ message }: { message: string }) {
           </div>
         </div>
       </div>
+      <footer className="w-full h-10 p-8 text-muted-foreground">
+        <div className="flex justify-between max-w-3xl">
+          {/* <a
+            href="/impressum"
+            className="flex transition-transform duration-300 text-muted-foreground hover:text-pink-800 hover:scale-110 hover:drop-shadow">
+            Impressum
+          </a> */}
+        </div>
+      </footer>
     </main>
   );
 }
