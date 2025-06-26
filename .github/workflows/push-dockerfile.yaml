@@ -10,6 +10,7 @@ on:
             type: choice
             options:
             - 'clients/fractiunate-ssr'
+            - 'server/node/node-dummy-server'
 
 jobs:
   docker:
