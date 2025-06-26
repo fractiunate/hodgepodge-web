@@ -1,21 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button } from "../components/ui/button.tsx";
-import logo from "./logo.svg";
-import qr from "./fractiunate-qr-mail.png";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { DialogClose, DialogFooter } from "../components/ui/dialog.tsx";
-import { Copy, Github, Linkedin, MessageCircle } from "lucide-react";
-import useTypewriter from "../hooks/use-typewriter.ts";
-import { Toaster, toast } from "sonner";
-import { cn } from "@/lib/utils.ts";
+import DesktopLayout from "@/layouts/desktop.tsx";
+import Header from "@/components/header.tsx";
 
 let typewriterInputTexts = [
   { text: "Fractiunate.me", weight: 1 },
@@ -28,228 +13,153 @@ let typewriterInputTexts = [
   { text: "your next level.", weight: 0 },
   { text: "the Cloud.", weight: 0 },
 ];
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useIsClient } from "@/hooks/useIsClient";
+import { HomeContent } from "@/components/homeContent";
+import { Button } from "@/components/ui/button";
+import { ArrowUpFromLine, PlusIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Reveal } from "@/components/ui/reveal";
 
-const Typewriter = ({
-  className,
-  text,
-  speed,
-}: {
-  className?: string;
-  text: string;
-  speed?: number;
-}) => {
-  const [typewriterText, setTypewriterText] = useState(text);
-  const [isHighlighted, setIsHighlighted] = useState(false);
-  const isDoneRef = useRef(false);
-  const [displayText, isDone] = useTypewriter(typewriterText, speed);
+import cloud_server from "../assets/cloud-server-freepik-com.jpg";
+import cloud_hodgepodge from "../assets/cloud-hodgepodge.png";
+import web_hodgepodge from "../assets/fractiunate-me-ssr-screenshot.png";
 
-  async function typeWriterTextList() {
-    console.log("Typewriter effect started");
-    while (!isDoneRef.current) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    setIsHighlighted(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  }
-
+export default function FloatingUpButton() {
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
-    isDoneRef.current = Boolean(isDone);
-  }, [isDone]);
-
-  useEffect(() => {
-    let active = true;
-
-    typeWriterTextList();
-    return () => {
-      active = false;
+    const handleScroll = () => {
+      setVisible(window.scrollY > 80);
     };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <p className={cn(className, isHighlighted ? "bg-purple-600" : "")}>
-      {displayText}
-    </p>
+    <div className="fixed z-50 bottom-4 right-4">
+      <Button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        variant="outline"
+        size="lg"
+        className={cn(
+          "bg-gray-900 text-gray-50 hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300",
+          "transition-opacity fade-in fade-out ease-in-out duration-500",
+          visible
+            ? "opacity-100 cursor-pointer"
+            : "opacity-0 pointer-events-none"
+        )}>
+        <ArrowUpFromLine size={6} />
+        <span className="sr-only">Up</span>
+      </Button>
+    </div>
   );
-};
-
-const CopyParagraph = ({
-  children,
-  label = "",
-}: {
-  children: React.ReactNode;
-  label: string;
-}) => {
-  const handleCopy = () => {
-    if (typeof children === "string") {
-      navigator.clipboard.writeText(children as string);
-      toast(`Copied ${label}`, {});
-    }
-  };
-
-  return (
-    <span className="flex items-center w-full gap-1">
-      <p>{children}</p>
-      <Copy
-        className="ml-2 cursor-pointer text-white/40 hover:text-purple-600 active:text-purple-800"
-        size={14}
-        onClick={handleCopy}
-      />
-    </span>
-  );
-};
+}
 
 export function Welcome({ message }: { message: string }) {
-  const [typewriterText, setTypewriterText] = useState("Fractiunate.me");
-
+  const projectsRef = useRef<HTMLDivElement>(null);
+  const isClient = useIsClient();
+  const isMobile = useMediaQuery("(max-width: 768px)");
   return (
-    <main className="flex flex-col h-screen p-4 text-white selection:bg-purple-600">
-      <Toaster
-        duration={1000}
-        position="top-center"
-      />
-
-      <div className="flex items-center w-full h-10 p-8">
-        <a
-          href="/"
-          className="text-gray-400">
-          <img
-            src={logo}
-            alt="Logo"
-            className="transition-transform duration-300 scale-105 w-58 filterit hover:scale-110 hover:drop-shadow"
-          />
-        </a>
-        <div className="flex gap-8 ml-auto text-lg">
-          <a
-            href="https://github.com/fractiunate"
-            className="flex items-center gap-1 text-white transition-transform duration-300 hover:text-pink-800 hover:scale-110 hover:drop-shadow">
-            <Github size={16} />
-            Github
-          </a>
-          <a
-            href="https://www.linkedin.com/in/fractiunate/"
-            className="flex items-center gap-1 text-white transition-transform duration-300 hover:text-pink-800 hover:scale-110 hover:drop-shadow">
-            <Linkedin size={16} />
-            Linked.in
-          </a>
-          <Dialog>
-            <DialogTrigger className="flex items-center gap-1 text-white transition-transform duration-300 cursor-pointer hover:text-pink-800 hover:scale-110 hover:drop-shadow">
-              <MessageCircle size={16} />
-              Contact
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle className="text-primary">
-                  FRACTIUNATE // Virtual business card
-                </DialogTitle>
-                <DialogDescription>
-                  <div className="flex pt-4">
-                    <div className="flex flex-col items-start justify-center flex-1 gap-1 text-primary/95">
-                      <span className="flex items-center w-full gap-1">
-                        <p>Name:</p>
-                        <CopyParagraph label="Name">
-                          David Rahäuser
-                        </CopyParagraph>
-                      </span>
-                      <span className="flex items-center w-full gap-1">
-                        <span className="min-w-12">E-Mail:</span>
-                        <CopyParagraph label="E-Mail">
-                          d.rahaeuser@gmail.com
-                        </CopyParagraph>
-                      </span>
-                      <span className="flex items-center w-full gap-1">
-                        <p>
-                          Web:{" "}
-                          <a
-                            className="text-purple-700 hover:underline"
-                            href="https://fractiunate.me">
-                            fractiunate.me
-                          </a>
-                        </p>
-                      </span>
-                      <span className="flex items-center w-full gap-1">
-                        <p>
-                          Whatsapp:{" "}
-                          <a
-                            className="text-purple-700 hover:underline"
-                            href="https://wa.me/qr/AN4AZN4NBDWUN1">
-                            Contact me
-                          </a>
-                        </p>
-                      </span>
-                      <span className="flex items-center w-full gap-1">
-                        <p>Mobile:</p>
-                        <CopyParagraph label="Mobile">
-                          +49 15209261143
-                        </CopyParagraph>
-                      </span>
-                    </div>
-
-                    <img
-                      src={qr}
-                      alt="qr-code"
-                      className="w-48 ml-auto transition-transform duration-300 scale-100 bg-white select-none filterit hover:scale-105 hover:drop-shadow"
-                    />
-                  </div>
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter className="select-none sm:justify-start">
-                <DialogClose asChild>
-                  <Button
-                    type="button"
-                    variant="secondary">
-                    Close
-                  </Button>
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+    <>
+      <DesktopLayout
+        header={<Header projectsRef={projectsRef}></Header>}
+        footer={<h1>test</h1>}>
+        <div className="flex mt-auto mb-auto h-[calc(100vh-80px)]">
+          {HomeContent(isClient, isMobile)}
         </div>
-      </div>
-      <div className="flex flex-col items-center justify-center flex-grow mb-20 content">
-        <div className="max-w-3xl text-center">
-          <h1 className="text-4xl">
-            <div className="flex items-center font-mono">
-              <p className="flex pr-4 ml-0 min-w-fit">This is</p>
-              {/* <p className=""> */}
-              <div className="flex items-center justify-start w-full h-12 p-2 border-2 border-gray-600 rounded-lg bg-muted">
-                <Typewriter
-                  className="overflow-hidden text-4xl font-bold text-left border-r whitespace-nowrap typewriter"
-                  text={typewriterText}
-                  speed={100}
-                />
+        {/* Projects */}
+        <FloatingUpButton />
+        <div
+          ref={projectsRef}
+          className="py-10 overflow-hidden px-30">
+          <div className="flex flex-col w-full">
+            <h1 className="flex items-center justify-center text-4xl font-bold mb-15">
+              Showcase
+            </h1>
+            <div className="flex flex-col gap-20">
+              <div className="flex w-full pl-10 text-lg text-gray-500">
+                <div className="w-1/3">
+                  <Reveal>
+                    <img
+                      className="object-cover rounded-lg shadow-lg "
+                      src={cloud_hodgepodge}></img>
+                  </Reveal>
+                </div>
+                <div className="w-2/3">
+                  <Reveal>
+                    <>
+                      <h2 className="pt-2 pl-10 text-2xl text-pink-800">
+                        Azure Cloud Hodgepodge
+                      </h2>
+
+                      <p className="p-10 pt-2 text-primary">
+                        This{" "}
+                        <a
+                          href="https://github.com/fractiunate/hodgepodge-cloud"
+                          className="underline hover:text-purple-600">
+                          Github project
+                        </a>{" "}
+                        is a collection of various cloud projects. Integrated
+                        with CI/CD and default deployment configs, it servers as
+                        my websites infrastructure hosted on Azure container
+                        apps as well as an Azure communication service setup
+                        that can sent e-mails, a template project for static
+                        webhosting, a bootstrapped kubernetes cluster with
+                        GitOps ready Argo-CD, fully auttomated TLS certificate
+                        management using LetsEncrypt & cert-manager, Istio
+                        routing and a lot more. All projects use OpenTofu
+                        instead of Hashicorps Terraform to be free and open
+                        source. The project is a work in progress and will be
+                        updated with more features and projects over time.
+                      </p>
+                    </>
+                  </Reveal>
+                </div>
               </div>
-              <div className="flex-grow"></div>
+              <div className="flex w-full pl-10 text-lg text-gray-500">
+                <div className="w-2/3">
+                  <Reveal>
+                    <>
+                      <h2 className="pt-2 pl-10 text-2xl text-pink-800">
+                        Fullstack Hodgepodge
+                      </h2>
+
+                      <p className="p-10 pt-2 text-primary">
+                        Another Hodgepodge, this time for web projects. The{" "}
+                        <a
+                          href="https://github.com/fractiunate/hodgepodge-web"
+                          className="underline hover:text-purple-600">
+                          Github project
+                        </a>{" "}
+                        is devided into client and server projects, although
+                        some client projects are server side rendered (SSR) and
+                        it could be argued that they belong into the server
+                        folder. You can find and inspect this sites source code
+                        under{" "}
+                        <span className="px-1 mr-1 rounded-sm text-muted bg-amber-50">
+                          clients/fractiunate-ssr/app/
+                        </span>
+                        .
+                      </p>
+                    </>
+                  </Reveal>
+                </div>
+                <div className="w-1/3">
+                  <Reveal>
+                    <img
+                      className="object-cover rounded-lg shadow-lg "
+                      src={web_hodgepodge}></img>
+                  </Reveal>
+                </div>
+              </div>
             </div>
-          </h1>
-          <div className="mx-4">
-            <p className="mt-4 text-md">
-              <span>Quality Software Engineering & Cloud Architecture</span>{" "}
-              made in Berlin.
-            </p>
-            <p className="mt-1 text-md">
-              Currently working for{" "}
-              <a href="https://gebit.de">
-                <span className="font-semibold hover:underline">
-                  GEBIT Solutions GmbH
-                </span>
-              </a>
-              .
-            </p>
           </div>
         </div>
-      </div>
-      <footer className="w-full h-10 p-8 text-muted-foreground">
-        <div className="flex justify-between max-w-3xl">
-          {/* <a
-            href="/impressum"
-            className="flex transition-transform duration-300 text-muted-foreground hover:text-pink-800 hover:scale-110 hover:drop-shadow">
-            Impressum
-          </a> */}
-        </div>
-      </footer>
-    </main>
+        <div className="h-screen">content3</div>
+        <div className="h-screen">content3</div>
+      </DesktopLayout>
+    </>
   );
 }
 

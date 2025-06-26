@@ -1,4 +1,9 @@
-# Welcome to React Router!
+# Fractiunate-SSR
+
+## Todos
+-[] floating contact and up buttons
+
+
 
 A modern, production-ready template for building full-stack React applications using React Router.
 
